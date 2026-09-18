@@ -10,6 +10,21 @@ stability under paired and independent recovery-duration sampling.
 
 > **Scope of this benchmark.** This repository is the case-study benchmark for the controlled comparison reported in the companion paper. It archives the inputs, the analysis code, the aggregate results, and the publication figures so that the reported numbers can be re-run and audited. It is not a plug-in evaluation harness. The candidate set, scenario multipliers, metrics, and intensity levels are defined as constants in the source rather than registered through a configuration file. See `docs/EXTENDING.md` for the exact constants to edit if you want to reuse the code with a different design.
 
+## Scenario names
+
+The scenario keys used in the code and in the archived result files are
+`shape_only`, `evidence_tradeoff` and `boundary_tradeoff`. In the manuscript the
+same three scenarios are reported as the shape-only, strong-speed-advantage and
+near-boundary scenarios.
+
+The keys are legacy internal identifiers and are kept unchanged so that the
+archived outputs remain faithful to what the code produced. In particular,
+`evidence_tradeoff` does not mean that the recovery multiplier of the fast
+profile is calibrated to evidence; it is a design scenario, and the manuscript
+names it accordingly. Display labels for the figures are set by
+`SCENARIO_LABELS` in `src/e1/make_publication_figures.py` and use the manuscript
+names.
+
 ## Repository layout
 
 | Path | Contents |

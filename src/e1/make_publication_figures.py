@@ -13,12 +13,9 @@ import matplotlib.patheffects as path_effects
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
-FIG_DIR = ROOT / "figures"
-STYLE = ROOT / "styles" / "publication.mplstyle"
-if STYLE.exists():
-    plt.style.use(STYLE)
-else:
-    plt.style.use("seaborn-v0_8-whitegrid")
+FIG_DIR = ROOT / "paper_rewriting_output" / "final_paper" / "figures" / "publication"
+STYLE = Path(r"C:\Users\Administrator.000\.codex\skills\scientific-visualization\assets\publication.mplstyle")
+plt.style.use(STYLE)
 # Embed TrueType fonts in vector output (Type 3 fonts are often rejected by publishers).
 matplotlib.rcParams["ps.fonttype"] = 42
 matplotlib.rcParams["pdf.fonttype"] = 42
@@ -43,7 +40,7 @@ def save_figure(figure, name: str) -> None:
 
 
 def figure_mean_regret() -> None:
-    rows = read_rows(ROOT / "results" / "e1_profile_monte_carlo" / "candidate_summary.csv")
+    rows = read_rows(ROOT / "tmp" / "e1_profile_monte_carlo" / "candidate_summary.csv")
     figure, axes = plt.subplots(1, 3, figsize=(7.4, 3.2), sharex=True)
     for axis, scenario in zip(axes, SCENARIOS):
         scenario_rows = [row for row in rows if row["scenario"] == scenario]
@@ -65,7 +62,7 @@ def figure_mean_regret() -> None:
 
 
 def figure_top1_matrix() -> None:
-    rows = read_rows(ROOT / "results" / "e1_profile_monte_carlo" / "candidate_summary.csv")
+    rows = read_rows(ROOT / "tmp" / "e1_profile_monte_carlo" / "candidate_summary.csv")
     matrix = np.zeros((len(CANDIDATES), len(SCENARIOS)))
     for row in rows:
         if row["candidate"] in CANDIDATES and row["scenario"] in SCENARIOS:
@@ -80,14 +77,14 @@ def figure_top1_matrix() -> None:
             axis.text(column, row, f"{value:.3f}", ha="center", va="center", fontsize=7, color="white" if value > 0.55 else "black")
             if value >= 0.5:
                 axis.add_patch(plt.Rectangle((column - 0.5, row - 0.5), 1, 1, fill=False, edgecolor="#D55E00", linewidth=1.2))
-    axis.set_title("Top-1 frequency", fontsize=9)
+    axis.set_title("Metric-aggregated Top-1 frequency", fontsize=9)
     figure.colorbar(image, ax=axis, fraction=0.046, pad=0.04, label="Frequency")
     figure.tight_layout()
     save_figure(figure, "fig1_top1_matrix")
 
 
 def figure_phase_boundary() -> None:
-    rows = read_rows(ROOT / "results" / "e1_profile_phase_diagram" / "phase_diagram.csv")
+    rows = read_rows(ROOT / "tmp" / "e1_profile_phase_diagram" / "phase_diagram.csv")
     capacities = sorted({float(row["capacity"]) for row in rows})
     speeds = sorted({float(row["speed_multiplier"]) for row in rows})
     z = np.zeros((len(capacities), len(speeds)))
@@ -109,7 +106,7 @@ def figure_phase_boundary() -> None:
 
 
 def figure_pareto_frontier() -> None:
-    rows = read_rows(ROOT / "results" / "e1_candidate_cost_frontier_final" / "candidate_frontier.csv")
+    rows = read_rows(ROOT / "tmp" / "e1_candidate_cost_frontier_final" / "candidate_frontier.csv")
     figure, axes = plt.subplots(1, 2, figsize=(7.0, 3.4), sharey=True)
     for axis, scenario in zip(axes, ["evidence_tradeoff", "boundary_tradeoff"]):
         selected = [row for row in rows if row["scenario"] == scenario and row["cost_form"] == "linear" and row["alpha_scenario"] == "moderate" and abs(float(row["theta_f"]) - 1.0) < 1e-9]
@@ -140,7 +137,7 @@ def figure_pareto_frontier() -> None:
 
 
 def figure_decision_map() -> None:
-    rows = read_rows(ROOT / "results" / "e1_candidate_cost_frontier_final" / "economic_utility.csv")
+    rows = read_rows(ROOT / "tmp" / "e1_candidate_cost_frontier_final" / "economic_utility.csv")
     vdays = sorted({float(row["normalized_v_day"]) for row in rows if float(row["normalized_v_day"]) > 0.0})
     thetas = sorted({float(row["theta_f"]) for row in rows if row["cost_form"] == "linear" and row["alpha_scenario"] == "moderate"})
     index = {candidate: position for position, candidate in enumerate(CANDIDATES)}
@@ -179,7 +176,7 @@ def figure_decision_map() -> None:
 
 
 def figure_sampling_mechanism() -> None:
-    rows = read_rows(ROOT / "results" / "e1_independent_sampling_final" / "sampling_mechanism_diagnostics.csv")
+    rows = read_rows(ROOT / "tmp" / "e1_independent_sampling_final" / "sampling_mechanism_diagnostics.csv")
     figure, axes = plt.subplots(1, 2, figsize=(7.2, 3.2), sharey=True)
     for axis, scenario in zip(axes, ["evidence_tradeoff", "boundary_tradeoff"]):
         selected = [row for row in rows if row["scenario"] == scenario]

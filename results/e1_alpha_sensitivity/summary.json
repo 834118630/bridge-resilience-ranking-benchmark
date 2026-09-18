@@ -1,0 +1,66 @@
+{
+  "grid": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "theta_f": 1.0,
+  "rows": 50,
+  "max_abs_error_analytic_identity": 0.0,
+  "L3_dominated_iff_alpha_s_ge_alpha_c": false,
+  "violations": [
+    {
+      "scenario": "evidence_tradeoff",
+      "alpha_c": 0.25,
+      "alpha_s": 0.0,
+      "theta_f": 1.0,
+      "cost_L3_minus_L4": -0.0625,
+      "analytic_0p25_alpha_s_minus_alpha_c": -0.0625,
+      "L3_pareto_efficient": false,
+      "pareto_members": "L0,L1,F_fast"
+    },
+    {
+      "scenario": "evidence_tradeoff",
+      "alpha_c": 0.5,
+      "alpha_s": 0.0,
+      "theta_f": 1.0,
+      "cost_L3_minus_L4": -0.125,
+      "analytic_0p25_alpha_s_minus_alpha_c": -0.125,
+      "L3_pareto_efficient": false,
+      "pareto_members": "L0,L1,F_fast"
+    },
+    {
+      "scenario": "evidence_tradeoff",
+      "alpha_c": 0.75,
+      "alpha_s": 0.0,
+      "theta_f": 1.0,
+      "cost_L3_minus_L4": -0.1875,
+      "analytic_0p25_alpha_s_minus_alpha_c": -0.1875,
+      "L3_pareto_efficient": false,
+      "pareto_members": "L0,L1,F_fast"
+    },
+    {
+      "scenario": "evidence_tradeoff",
+      "alpha_c": 1.0,
+      "alpha_s": 0.0,
+      "theta_f": 1.0,
+      "cost_L3_minus_L4": -0.25,
+      "analytic_0p25_alpha_s_minus_alpha_c": -0.25,
+      "L3_pareto_efficient": false,
+      "pareto_members": "L0,L1,F_fast"
+    },
+    {
+      "scenario": "boundary_tradeoff",
+      "alpha_c": 0.25,
+      "alpha_s": 0.0,
+      "theta_f": 1.0,
+      "cost_L3_minus_L4": -0.0625,
+      "analytic_0p25_alpha_s_minus_alpha_c": -0.0625,
+      "L3_pareto_efficient": false,
+      "pareto_members": "L0,L1,F_fast"
+    }
+  ],
+  "boundary_note": "alpha_c = 1.0 with alpha_s = 0.0 puts the L0 cost index at zero; the point is retained as the edge of the linear model's validity."
+}

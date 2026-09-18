@@ -1,0 +1,69 @@
+{
+  "seed": 20260914,
+  "n_samples": 10000,
+  "bootstrap_resamples": 10000,
+  "profile_labels": [
+    "L0",
+    "L1",
+    "L2",
+    "L3",
+    "L4",
+    "F_fast"
+  ],
+  "profile_capacities": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    0.5
+  ],
+  "profile_scenarios": {
+    "shape_only": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "evidence_tradeoff": [
+      1.0,
+      1.15,
+      1.3,
+      1.5,
+      1.75,
+      0.1
+    ],
+    "boundary_tradeoff": [
+      1.0,
+      1.15,
+      1.3,
+      1.5,
+      1.75,
+      0.5
+    ]
+  },
+  "recovery_models": [
+    "linear",
+    "exponential",
+    "trigonometric",
+    "delayed_recovery"
+  ],
+  "metrics": [
+    "resilience_index",
+    "functionality_day_30",
+    "functionality_day_90",
+    "recovery_rapidity_90"
+  ],
+  "input_hashes": {
+    "C:\\Users\\Administrator.000\\Documents\\ChatGPT\\桥梁SCI论文写作\\02_PLANNING\\e1_g0\\07_hazus_fragility.csv": "7e41c1ed8b364815284e1545bc378db06e96f5423e56c2f4ff0f178730f96801",
+    "C:\\Users\\Administrator.000\\Documents\\ChatGPT\\桥梁SCI论文写作\\02_PLANNING\\e1_g0\\08_hazus_recovery.csv": "5cfa42513f59b7a007e68fa1fc7a7baaed4b6c84856aea2ae7e4604a8dc3f2fd"
+  },
+  "environment": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  }
+}

@@ -1,0 +1,17 @@
+case_id,bridge_class,description,damage_state,median_sa_1s_g,beta,source
+A,HWB5,Conventional multi-column bent simple-support concrete,Slight,0.25,0.6,FEMA HAZUS 6.1 Table 7-6
+A,HWB5,Conventional multi-column bent simple-support concrete,Moderate,0.35,0.6,FEMA HAZUS 6.1 Table 7-6
+A,HWB5,Conventional multi-column bent simple-support concrete,Extensive,0.45,0.6,FEMA HAZUS 6.1 Table 7-6
+A,HWB5,Conventional multi-column bent simple-support concrete,Complete,0.70,0.6,FEMA HAZUS 6.1 Table 7-6
+A,HWB7,Seismic multi-column bent simple-support concrete,Slight,0.50,0.6,FEMA HAZUS 6.1 Table 7-6
+A,HWB7,Seismic multi-column bent simple-support concrete,Moderate,0.80,0.6,FEMA HAZUS 6.1 Table 7-6
+A,HWB7,Seismic multi-column bent simple-support concrete,Extensive,1.10,0.6,FEMA HAZUS 6.1 Table 7-6
+A,HWB7,Seismic multi-column bent simple-support concrete,Complete,1.70,0.6,FEMA HAZUS 6.1 Table 7-6
+B,HWB10,Conventional continuous concrete,Slight,0.35,0.6,FEMA HAZUS 6.1 Table 7-6
+B,HWB10,Conventional continuous concrete,Moderate,0.45,0.6,FEMA HAZUS 6.1 Table 7-6
+B,HWB10,Conventional continuous concrete,Extensive,0.55,0.6,FEMA HAZUS 6.1 Table 7-6
+B,HWB10,Conventional continuous concrete,Complete,0.80,0.6,FEMA HAZUS 6.1 Table 7-6
+B,HWB11,Seismic continuous concrete,Slight,0.60,0.6,FEMA HAZUS 6.1 Table 7-6
+B,HWB11,Seismic continuous concrete,Moderate,0.90,0.6,FEMA HAZUS 6.1 Table 7-6
+B,HWB11,Seismic continuous concrete,Extensive,1.30,0.6,FEMA HAZUS 6.1 Table 7-6
+B,HWB11,Seismic continuous concrete,Complete,1.60,0.6,FEMA HAZUS 6.1 Table 7-6

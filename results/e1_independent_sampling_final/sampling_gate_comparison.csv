@@ -1,0 +1,4 @@
+scenario,paired_top1_winner,independent_top1_winner,paired_fast_top1,independent_fast_top1,fast_top1_delta,paired_pareto_members,independent_pareto_members,gate_status
+shape_only,L4,L4,0.0,0.044,-0.044,"L0,L1,L2,L3,L4,F_fast","L0,L1,L3,L4,F_fast",not_applicable_shape_only
+evidence_tradeoff,F_fast,F_fast,1.0,0.9968,0.0031999999999999806,"L0,L1,L2,L4,F_fast","L0,L1,L2,L4,F_fast",keep
+boundary_tradeoff,F_fast,F_fast,0.9553,0.6288,0.3265,"L0,L1,L2,L4,F_fast","L0,L1,L2,L4,F_fast",downgrade

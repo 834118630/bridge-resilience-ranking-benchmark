@@ -36,7 +36,7 @@ from .run_pilot import (
 )
 from .uncertainty import percentile_ci, stratified_paired_bootstrap
 
-OUTPUT_DIR = PROJECT_ROOT / "results" / "e1_profile_monte_carlo"
+OUTPUT_DIR = PROJECT_ROOT / "tmp" / "e1_profile_monte_carlo"
 PROFILE_LABELS = ["L0", "L1", "L2", "L3", "L4", "F_fast"]
 PROFILE_CAPACITIES = [0.0, 0.25, 0.5, 0.75, 1.0, 0.5]
 PROFILE_SCENARIOS = {
@@ -120,6 +120,7 @@ def main() -> None:
     for scenario_name, multipliers in PROFILE_SCENARIOS.items():
         recovery_times = candidate_recovery_times(base_recovery_days, multipliers)
         condition_means: dict[str, list[tuple[str, np.ndarray]]] = defaultdict(list)
+        within_condition_variance: list[np.ndarray] = []
         top1_counts = {
             metric_name: {
                 candidate: 0
@@ -179,13 +180,27 @@ def main() -> None:
                 for model_name in RECOVERY_MODELS:
                     values = model_arrays[model_name]
                     for sa_index in range(len(SA_LEVELS)):
+                        # Regret for every Monte Carlo replication in this
+                        # condition. The condition contribution to the mean
+                        # regret is the average over all replications; reducing
+                        # to a single replication here would discard the rest of
+                        # the sample and invalidate the estimand and its
+                        # interval.
+                        scene_regret = normalized_regret_for_scene(
+                            values[:, :, sa_index]
+                        )
                         condition_means[case_id].append(
                             (
                                 case_id,
-                                normalized_regret_for_scene(
-                                    values[:, :, sa_index]
-                                )[0],
+                                scene_regret.mean(axis=0),
                             )
+                        )
+                        # Within-condition Monte Carlo variance of that mean,
+                        # kept so that the two sources of uncertainty can be
+                        # reported separately.
+                        within_condition_variance.append(
+                            scene_regret.var(axis=0, ddof=1)
+                            / scene_regret.shape[0]
                         )
 
         condition_entries = [
@@ -222,6 +237,11 @@ def main() -> None:
             args.bootstrap_resamples,
             rng,
         )
+        mc_variance_of_mean = (
+            np.stack(within_condition_variance, axis=0).mean(axis=0)
+            / len(within_condition_variance)
+        )
+        mc_standard_error = np.sqrt(mc_variance_of_mean)
         for index, candidate in enumerate(PROFILE_LABELS):
             candidate_rows.append(
                 {
@@ -230,6 +250,7 @@ def main() -> None:
                     "mean_regret": float(mean_regret_by_candidate[index]),
                     "bootstrap_ci95_low": float(low_by_candidate[index]),
                     "bootstrap_ci95_high": float(high_by_candidate[index]),
+                    "mc_standard_error": float(mc_standard_error[index]),
                     "top1_frequency": float(
                         sum(
                             top1_counts[metric_name][candidate]

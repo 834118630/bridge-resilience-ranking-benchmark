@@ -8,6 +8,8 @@ recovery-function shapes, evaluates a six-candidate capacity and recovery-speed 
 extends the comparison to a normalized performance-cost surface, and tests ranking
 stability under paired and independent recovery-duration sampling.
 
+> **Scope of this benchmark.** This repository is the case-study benchmark for the controlled comparison reported in the companion paper. It archives the inputs, the analysis code, the aggregate results, and the publication figures so that the reported numbers can be re-run and audited. It is not a plug-in evaluation harness. The candidate set, scenario multipliers, metrics, and intensity levels are defined as constants in the source rather than registered through a configuration file. See `docs/EXTENDING.md` for the exact constants to edit if you want to reuse the code with a different design.
+
 ## Repository layout
 
 | Path | Contents |

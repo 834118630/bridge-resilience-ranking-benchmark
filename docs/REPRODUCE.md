@@ -25,20 +25,23 @@ python -m pytest -q
 
 ## Re-running the analyses from scratch
 
-Each runner writes its full output tree under `results/`. The archived directories in
-this repository are the aggregate outputs only. Full per-run trees, logs, and raw
-Monte Carlo draws are not archived. To regenerate everything:
+The runners use relative imports, so they must be invoked as modules with the
+`src` directory on the path, not as file paths.
 
 ```
-python src/e1/run_profile_monte_carlo.py
-python src/e1/run_profile_phase_diagram.py
-python src/e1/run_candidate_cost_frontier.py
-python src/e1/run_independent_sampling_robustness.py
-python src/e1/run_monte_carlo.py
+python -m e1.run_profile_monte_carlo --samples 10000 --seed 20260914 --bootstrap-resamples 10000
+python -m e1.run_profile_phase_diagram
+python -m e1.run_candidate_cost_frontier
+python -m e1.run_independent_sampling_robustness
+python -m e1.run_monte_carlo
 ```
 
-Run them in that order. `run_candidate_cost_frontier.py` reads the candidate summary
-produced by `run_profile_monte_carlo.py`.
+Run `python -m e1.run_profile_monte_carlo` from a directory that contains `e1` on
+the import path, for example after `set PYTHONPATH=src` on Windows or
+`export PYTHONPATH=src` on Linux and macOS.
+
+Run them in that order. `run_candidate_cost_frontier` reads the candidate summary
+produced by `run_profile_monte_carlo`.
 
 ## Random seeds
 

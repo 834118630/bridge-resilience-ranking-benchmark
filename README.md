@@ -58,7 +58,7 @@ byte for byte. The PDF figures differ only in the embedded PDF creation timestam
 | `run_profile_monte_carlo.py` | `results/e1_profile_monte_carlo/` | Figure 1, Figure 2, Sections 4.1 and 4.2 |
 | `run_profile_phase_diagram.py` | `results/e1_profile_phase_diagram/` | Figure 3 |
 | `run_candidate_cost_frontier.py` | `results/e1_candidate_cost_frontier_final/` | Figure 4, Figure 5, Sections 4.4 and 4.5 |
-| `run_independent_sampling_robustness.py` | `results/e1_independent_sampling_final/` | Figure 6, Table 2, Section 4.6 |
+| `run_independent_sampling_robustness.py` | `results/e1_independent_sampling_final/` | Figure 6, Table 3, Section 4.6 |
 | `run_monte_carlo.py` | `results/e1_monte_carlo/` | Bootstrap and uncertainty summaries |
 | `make_publication_figures.py` | `figures/` | All six publication figures |
 | `run_regret_variants.py` | `results/e1_regret_variants/` | Regret variant comparison |

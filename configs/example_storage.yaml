@@ -1,0 +1,6 @@
+# Example configuration. Copy to storage.yaml and edit for your machine.
+# Scientific code reads paths from configuration or environment variables and
+# never hard codes drive letters.
+project_root: .
+results_root: results
+figures_root: figures

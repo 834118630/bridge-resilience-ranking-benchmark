@@ -61,6 +61,7 @@ byte for byte. The PDF figures differ only in the embedded PDF creation timestam
 | `run_independent_sampling_robustness.py` | `results/e1_independent_sampling_final/` | Figure 6, Table 3, Section 4.6 |
 | `run_monte_carlo.py` | `results/e1_monte_carlo/` | Bootstrap and uncertainty summaries |
 | `make_publication_figures.py` | `figures/` | All six publication figures |
+| `run_alpha_sensitivity.py` | `results/e1_alpha_sensitivity/` | Independent scan of the two cost coefficients, Section 4.4 |
 | `run_regret_variants.py` | `results/e1_regret_variants/` | Regret variant comparison |
 
 Other runners in `src/e1/` are supporting or historical analyses. Their outputs are not

@@ -1,0 +1,98 @@
+{
+  "shape_only": {
+    "L0": {
+      "condition_minimax_regret": 1.0,
+      "bootstrap_ci95_low": 1.0,
+      "bootstrap_ci95_high": 1.0
+    },
+    "L1": {
+      "condition_minimax_regret": 0.9051486028672951,
+      "bootstrap_ci95_low": 0.8917241893913829,
+      "bootstrap_ci95_high": 0.9051486028672951
+    },
+    "L2": {
+      "condition_minimax_regret": 0.7410751841827443,
+      "bootstrap_ci95_low": 0.7195991028588234,
+      "bootstrap_ci95_high": 0.7410751841827443
+    },
+    "L3": {
+      "condition_minimax_regret": 0.5594072442038543,
+      "bootstrap_ci95_low": 0.4417385572586704,
+      "bootstrap_ci95_high": 0.5594072442038543
+    },
+    "L4": {
+      "condition_minimax_regret": 0.0,
+      "bootstrap_ci95_low": 0.0,
+      "bootstrap_ci95_high": 0.0
+    },
+    "F_fast": {
+      "condition_minimax_regret": 0.7410751841827443,
+      "bootstrap_ci95_low": 0.7195991028588234,
+      "bootstrap_ci95_high": 0.7410751841827443
+    }
+  },
+  "evidence_tradeoff": {
+    "L0": {
+      "condition_minimax_regret": 1.0,
+      "bootstrap_ci95_low": 1.0,
+      "bootstrap_ci95_high": 1.0
+    },
+    "L1": {
+      "condition_minimax_regret": 1.0,
+      "bootstrap_ci95_low": 1.0,
+      "bootstrap_ci95_high": 1.0
+    },
+    "L2": {
+      "condition_minimax_regret": 1.0,
+      "bootstrap_ci95_low": 1.0,
+      "bootstrap_ci95_high": 1.0
+    },
+    "L3": {
+      "condition_minimax_regret": 1.0,
+      "bootstrap_ci95_low": 1.0,
+      "bootstrap_ci95_high": 1.0
+    },
+    "L4": {
+      "condition_minimax_regret": 1.0,
+      "bootstrap_ci95_low": 0.9502388151443069,
+      "bootstrap_ci95_high": 1.0
+    },
+    "F_fast": {
+      "condition_minimax_regret": 0.056791511637104386,
+      "bootstrap_ci95_low": 0.042022551308920464,
+      "bootstrap_ci95_high": 0.056791511637104386
+    }
+  },
+  "boundary_tradeoff": {
+    "L0": {
+      "condition_minimax_regret": 1.0,
+      "bootstrap_ci95_low": 1.0,
+      "bootstrap_ci95_high": 1.0
+    },
+    "L1": {
+      "condition_minimax_regret": 1.0,
+      "bootstrap_ci95_low": 1.0,
+      "bootstrap_ci95_high": 1.0
+    },
+    "L2": {
+      "condition_minimax_regret": 1.0,
+      "bootstrap_ci95_low": 1.0,
+      "bootstrap_ci95_high": 1.0
+    },
+    "L3": {
+      "condition_minimax_regret": 1.0,
+      "bootstrap_ci95_low": 1.0,
+      "bootstrap_ci95_high": 1.0
+    },
+    "L4": {
+      "condition_minimax_regret": 1.0,
+      "bootstrap_ci95_low": 0.9264900348231304,
+      "bootstrap_ci95_high": 1.0
+    },
+    "F_fast": {
+      "condition_minimax_regret": 0.4611587461283273,
+      "bootstrap_ci95_low": 0.40170538477641776,
+      "bootstrap_ci95_high": 0.4611587461283273
+    }
+  }
+}

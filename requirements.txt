@@ -1,0 +1,7 @@
+# Core analysis and figure stack.
+# Versions are the ones used to produce the archived results where noted.
+numpy>=1.26
+pandas>=2.0
+matplotlib>=3.8      # archived results produced with 3.11.2
+scipy>=1.11
+pytest>=7.4

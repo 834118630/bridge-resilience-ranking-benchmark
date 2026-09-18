@@ -1,0 +1,4 @@
+scenario,kendall_tau,spearman_rho,top1_mean_regret,top1_loss_days,top1_same
+shape_only,1.0,1.0,L4,L4,True
+evidence_tradeoff,0.9999999999999999,1.0,F_fast,F_fast,True
+boundary_tradeoff,0.9999999999999999,1.0,F_fast,F_fast,True

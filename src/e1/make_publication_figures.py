@@ -23,7 +23,9 @@ CANDIDATES = ["F_fast", "L4", "L3", "L2", "L1", "L0"]
 COLORS = {"L0": "#999999", "L1": "#56B4E9", "L2": "#0072B2", "L3": "#666666", "L4": "#009E73", "F_fast": "#D55E00"}
 MARKERS = {"L0": "s", "L1": "^", "L2": "o", "L3": "v", "L4": "D", "F_fast": "P"}
 SCENARIOS = ["shape_only", "evidence_tradeoff", "boundary_tradeoff"]
-SCENARIO_LABELS = {"shape_only": "Shape-only", "evidence_tradeoff": "Evidence tradeoff", "boundary_tradeoff": "Boundary tradeoff"}
+# Display labels. The scenario keys are legacy internal identifiers and are kept so that the
+# archived result files remain readable without modification.
+SCENARIO_LABELS = {"shape_only": "Shape-only", "evidence_tradeoff": "Strong-speed-advantage", "boundary_tradeoff": "Near-boundary"}
 
 
 def read_rows(path: Path):

@@ -94,7 +94,11 @@ Agency in 2024. See `docs/DATA_SOURCES.md`. No proprietary or restricted data ar
 
 The benchmark is synthetic and controlled. The fast-recovery profile is an abstract
 stress test profile and not a specific retrofit technology. Costs are normalized indices
-and not monetary amounts. The cost correlation coefficients are scenario parameters and
+and not monetary amounts. The cost index is anchored at L4, so an index below 1 does not
+mean that the option is free. Only cost differences between candidates enter the utility
+comparison, the manuscript reports the economic layer on an incremental basis relative to
+the no-action baseline, and adding or subtracting the same constant from every candidate
+cannot change the winner. The cost correlation coefficients are scenario parameters and
 not calibrated elasticities. Results apply only to the tested bridge classes, damage
 states, intensity levels, recovery parameters, candidate profiles, and cost scenarios.
 

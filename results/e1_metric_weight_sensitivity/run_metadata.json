@@ -1,0 +1,24 @@
+{
+  "status": "complete",
+  "failure_status": "none",
+  "generated_at_utc": "2026-09-19T03:27:20.893121+00:00",
+  "command": "python -m e1.run_metric_weight_sensitivity --draws 10000 --seed 20260919 --output-dir results/e1_metric_weight_sensitivity",
+  "parameters": {
+    "draws": 10000,
+    "seed": 20260919
+  },
+  "input_hashes": {
+    "results/e1_profile_monte_carlo/metric_regret_summary.csv": "4c23087b10fc2369679e112cdc91858bf590bc1adc9bd3b9852e963fba46f1aa"
+  },
+  "output_hashes": {
+    "results/e1_metric_weight_sensitivity/metric_weight_sensitivity.csv": "3a4862786c287a7d555df9e9b39997396e7c2286e6dc5ae401f26abd8de1b99a",
+    "results/e1_metric_weight_sensitivity/metric_weight_winner_frequency.csv": "8fbd4815d6c9ef2844b6c804c07ce58bcdfb4b6b3dce1e7f55080f70d84c92d8",
+    "results/e1_metric_weight_sensitivity/summary.json": "78683462124d59f2c4165569f8d96cf7eb12d1a67c6f10553a8b190f66516b9b"
+  },
+  "environment": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  }
+}

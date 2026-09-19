@@ -36,7 +36,7 @@ names.
 | `results/` | Aggregate outputs that back the figures and tables of the paper |
 | `figures/` | Publication figures (PNG at 600 dpi plus vector PDF and EPS); the two-panel Fig. 1 EPS is larger because the heatmaps are embedded as high-resolution raster fields |
 | `styles/` | Matplotlib style sheet used for the figures |
-| `docs/` | Data sources and step by step reproduction notes |
+| `docs/` | Data sources, step-by-step reproduction notes, and supplementary methods |
 
 ## Setup
 
@@ -53,7 +53,7 @@ python -m pytest -q
 python -m pytest -q
 ```
 
-Expected outcome: 26 passed and 1 deselected integration test. Two unit tests read the HAZUS parameter tables in `data/`.
+Expected outcome: 27 passed and 1 deselected integration test. Two unit tests read the HAZUS parameter tables in `data/`.
 
 ## Reproduce the figures
 
@@ -76,7 +76,8 @@ The command also has an integration test that verifies the six archived PNG file
 | `run_monte_carlo.py` | `results/e1_monte_carlo/` | Bootstrap and uncertainty summaries |
 | `make_publication_figures.py` | `figures/` | All six publication figures |
 | `run_alpha_sensitivity.py` | `results/e1_alpha_sensitivity/` | Independent scan of the two cost coefficients, Section 4.4 |
-| `run_recovery_distribution_sensitivity.py` | `results/e1_recovery_distribution_sensitivity/` | Lower-bound and distribution-form robustness for recovery duration, Section 4.2 |
+| `run_recovery_distribution_sensitivity.py` | `results/e1_recovery_distribution_sensitivity/` | Lower-bound and distribution-form robustness for recovery duration, Supplementary Table S1 |
+| `run_metric_weight_sensitivity.py` | `results/e1_metric_weight_sensitivity/` | Deterministic and Dirichlet metric-weight robustness, Supplementary Table S2 |
 | `run_regret_variants.py` | `results/e1_regret_variants/` | Regret variant comparison |
 
 Other runners in `src/e1/` are supporting or historical analyses. Their outputs are not

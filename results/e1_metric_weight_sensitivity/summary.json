@@ -1,0 +1,38 @@
+{
+  "input": "C:\\Users\\Administrator.000\\Documents\\ChatGPT\\桥梁SCI论文写作\\tmp\\e1_profile_monte_carlo\\metric_regret_summary.csv",
+  "draws": 10000,
+  "seed": 20260919,
+  "weight_schemes": {
+    "equal": {
+      "resilience_index": 0.25,
+      "functionality_day_30": 0.25,
+      "functionality_day_90": 0.25,
+      "recovery_rapidity_90": 0.25
+    },
+    "rapidity_emphasis": {
+      "resilience_index": 0.2,
+      "functionality_day_30": 0.2,
+      "functionality_day_90": 0.2,
+      "recovery_rapidity_90": 0.4
+    },
+    "resilience_emphasis": {
+      "resilience_index": 0.4,
+      "functionality_day_30": 0.2,
+      "functionality_day_90": 0.2,
+      "recovery_rapidity_90": 0.2
+    },
+    "early_functionality_emphasis": {
+      "resilience_index": 0.2,
+      "functionality_day_30": 0.4,
+      "functionality_day_90": 0.2,
+      "recovery_rapidity_90": 0.2
+    }
+  },
+  "dirichlet_prior": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "interpretation": "weight sensitivity is post-hoc robustness, not a calibrated prior"
+}

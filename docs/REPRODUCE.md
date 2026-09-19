@@ -33,7 +33,7 @@ On Linux or macOS, use `export RUN_INTEGRATION=1`.
 python -m pytest -q -m "not integration"
 ```
 
-Expected outcome: 26 passed and 1 deselected.
+Expected outcome: 27 passed and 1 deselected.
 
 ## Re-running the analyses from scratch
 
@@ -51,6 +51,7 @@ python -m e1.run_candidate_cost_frontier --samples 10000 --seed 20260919 --time-
 python -m e1.run_independent_sampling_robustness --samples 10000 --seed 20260919 --time-step-days 2.0 --output-dir results/e1_independent_sampling_final
 python -m e1.run_alpha_sensitivity --theta-f 1.0 --grid 0.0 0.25 0.5 0.75 1.0 --output-dir results/e1_alpha_sensitivity
 python -m e1.run_recovery_distribution_sensitivity --samples 10000 --seed 20260914 --output-dir results/e1_recovery_distribution_sensitivity
+python -m e1.run_metric_weight_sensitivity --draws 10000 --seed 20260919 --output-dir results/e1_metric_weight_sensitivity
 python -m e1.run_monte_carlo
 ```
 

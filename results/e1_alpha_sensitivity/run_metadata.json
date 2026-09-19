@@ -1,0 +1,29 @@
+{
+  "status": "complete",
+  "failure_status": "none",
+  "generated_at_utc": "2026-09-19T02:35:50.926356+00:00",
+  "command": "python -m e1.run_alpha_sensitivity --theta-f 1.0 --grid 0.0 0.25 0.5 0.75 1.0 --output-dir results/e1_alpha_sensitivity",
+  "parameters": {
+    "theta_f": 1.0,
+    "grid": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ]
+  },
+  "input_hashes": {
+    "results/e1_profile_monte_carlo/candidate_summary.csv": "5454266b1dcefb5a290d8f5823b25129dc5ef6d3fc5a6cbfbafe439cae9799ed"
+  },
+  "output_hashes": {
+    "results/e1_alpha_sensitivity/alpha_sensitivity.csv": "a5502d32db36b9ae56f39591d1950402644ad54a6119f010ff45148024db7a71",
+    "results/e1_alpha_sensitivity/summary.json": "e5e0ba4d6ae5bd83c604d3fc0aabb0e33bc2684a2d7c6e29106fda3313a0a607"
+  },
+  "environment": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  }
+}

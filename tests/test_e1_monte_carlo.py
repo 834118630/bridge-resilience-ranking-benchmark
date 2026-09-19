@@ -9,11 +9,13 @@ from e1.metrics import functionality_curve, resilience_index, time_to_target
 from e1.monte_carlo import (
     cumulative_shape_integral,
     damage_state_probabilities_batch,
+    fractional_top1_credit,
     linear_metric_values,
     metrics_batch,
     pairwise_metric_differences,
     ranking_stability_statistics,
     recovery_parameter_arrays,
+    sample_recovery_days_matrix,
 )
 from e1.recovery_models import RECOVERY_MODELS
 from e1.run_pilot import DAMAGE_STATES, damage_state_probabilities
@@ -188,3 +190,35 @@ def test_pairwise_metric_differences_match_manual_difference():
     assert actual.shape == (2, 3, 2)
     assert np.allclose(actual[0, 0], values[0, 0] - values[0, 1])
     assert np.allclose(actual[1, 2], values[1, 1] - values[1, 2])
+
+
+def test_fractional_top1_credit_splits_exact_ties():
+    values = np.array(
+        [
+            [1.0, 1.0, 0.5],
+            [0.9, 0.8, 0.7],
+        ]
+    )
+    credit = fractional_top1_credit(values)
+    assert np.allclose(credit.sum(axis=1), 1.0)
+    assert np.allclose(credit[0], [0.5, 0.5, 0.0])
+    assert np.allclose(credit[1], [1.0, 0.0, 0.0])
+
+
+def test_lognormal_recovery_sampling_respects_lower_bound():
+    recovery = {
+        "Slight": {"mean_days": 0.6, "sd_days": 0.6},
+        "Moderate": {"mean_days": 2.5, "sd_days": 2.7},
+        "Extensive": {"mean_days": 75.0, "sd_days": 42.0},
+        "Complete": {"mean_days": 230.0, "sd_days": 110.0},
+    }
+    samples = sample_recovery_days_matrix(
+        recovery,
+        2000,
+        np.random.default_rng(7),
+        lower_bound_days=0.05,
+        distribution="lognormal",
+    )
+    assert samples.shape == (2000, 4)
+    assert np.all(np.isfinite(samples))
+    assert np.min(samples) >= 0.05

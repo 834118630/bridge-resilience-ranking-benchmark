@@ -1,0 +1,27 @@
+{
+  "status": "complete",
+  "failure_status": "none",
+  "generated_at_utc": "2026-09-19T02:35:50.917361+00:00",
+  "command": "python -m e1.run_independent_sampling_robustness --samples 10000 --seed 20260919 --time-step-days 2.0 --output-dir results/e1_independent_sampling_final",
+  "parameters": {
+    "samples": 10000,
+    "seed": 20260919,
+    "time_step_days": 2.0
+  },
+  "input_hashes": {
+    "data/07_hazus_fragility.csv": "7e41c1ed8b364815284e1545bc378db06e96f5423e56c2f4ff0f178730f96801",
+    "data/08_hazus_recovery.csv": "5cfa42513f59b7a007e68fa1fc7a7baaed4b6c84856aea2ae7e4604a8dc3f2fd"
+  },
+  "output_hashes": {
+    "results/e1_independent_sampling_final/sampling_candidate_metrics.csv": "eb88dda88058346051961718a8d0334a3bcb505f795b862276073646b8d431cb",
+    "results/e1_independent_sampling_final/sampling_gate_comparison.csv": "28826a7a88367d8a31e970935f0f00aeefaa330e844814a386470b7dd91dd066",
+    "results/e1_independent_sampling_final/sampling_mechanism_diagnostics.csv": "d038f0809cc398fc87e1ea0dd38f2d3f159abce94b6640037a87ecd930f965cd",
+    "results/e1_independent_sampling_final/sampling_summary.json": "51cfc8c7fed9cb35159d009dd889623f1a062c614f77e24b498e9d6a2e08c0e9"
+  },
+  "environment": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  }
+}

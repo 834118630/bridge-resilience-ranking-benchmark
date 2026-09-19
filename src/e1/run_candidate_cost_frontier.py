@@ -32,6 +32,7 @@ from .run_cost_break_even import (
     discounted_loss_days,
     expected_curves,
 )
+from .provenance import write_run_metadata
 from .run_monte_carlo import load_beta
 from .run_pilot import (
     DAMAGE_STATES,
@@ -49,7 +50,7 @@ from .run_profile_monte_carlo import (
     PROFILE_SCENARIOS,
 )
 
-OUTPUT_DIR = PROJECT_ROOT / "results" / "e1_candidate_cost_frontier"
+OUTPUT_DIR = PROJECT_ROOT / "results" / "e1_candidate_cost_frontier_final"
 COST_FORMS = ("linear", "exponential")
 ALPHA_SCENARIOS = {
     "independent": 0.0,
@@ -470,7 +471,6 @@ def main() -> None:
 
     with (output_dir / "frontier_summary.json").open("w", encoding="utf-8") as handle:
         json.dump(summary, handle, ensure_ascii=False, indent=2)
-
     regret_path = PROJECT_ROOT / "results" / "e1_profile_monte_carlo" / "candidate_summary.csv"
     mean_regret = load_mean_regret(regret_path)
     concordance_rows: list[dict[str, object]] = []
@@ -560,6 +560,25 @@ def main() -> None:
         figure.tight_layout()
         figure.savefig(figure_dir / f"{scenario_name}_linear_moderate_frontier.png", dpi=220)
         plt.close(figure)
+
+    write_run_metadata(
+        output_dir,
+        command="python -m e1.run_candidate_cost_frontier "
+        f"--samples {args.samples} --seed {args.seed} "
+        f"--time-step-days {args.time_step_days} "
+        f"--bootstrap-resamples {args.bootstrap_resamples} "
+        f"--output-dir {output_dir}",
+        parameters={
+            "samples": args.samples,
+            "seed": args.seed,
+            "time_step_days": args.time_step_days,
+            "bootstrap_resamples": args.bootstrap_resamples,
+            "cost_forms": list(COST_FORMS),
+            "theta_f_grid": list(THETA_F_GRID),
+            "vday_grid": list(VDAY_GRID),
+        },
+        input_paths=(fragility_path, recovery_path, regret_path),
+    )
 
     print(
         json.dumps(

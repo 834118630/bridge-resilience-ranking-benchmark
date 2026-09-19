@@ -67,23 +67,123 @@ def figure_mean_regret() -> None:
 
 
 def figure_top1_matrix() -> None:
-    rows = read_rows(ROOT / "results" / "e1_profile_monte_carlo" / "candidate_summary.csv")
+    candidate_rows = read_rows(ROOT / "results" / "e1_profile_monte_carlo" / "candidate_summary.csv")
+    ranking_rows = read_rows(ROOT / "results" / "e1_profile_monte_carlo" / "ranking_summary.csv")
     matrix = np.zeros((len(CANDIDATES), len(SCENARIOS)))
-    for row in rows:
+    for row in candidate_rows:
         if row["candidate"] in CANDIDATES and row["scenario"] in SCENARIOS:
-            matrix[CANDIDATES.index(row["candidate"]), SCENARIOS.index(row["scenario"])] = float(row["top1_frequency"])
-    figure, axis = plt.subplots(figsize=(4.4, 3.4))
-    image = axis.imshow(matrix, cmap="Blues", vmin=0, vmax=1, aspect="auto")
-    axis.set_xticks(range(len(SCENARIOS)), [SCENARIO_LABELS[s] for s in SCENARIOS])
-    axis.set_yticks(range(len(CANDIDATES)), CANDIDATES)
+            matrix[CANDIDATES.index(row["candidate"]), SCENARIOS.index(row["scenario"])] = float(
+                row["top1_frequency"]
+            )
+
+    figure, (axis_a, axis_b) = plt.subplots(
+        1,
+        2,
+        figsize=(9.2, 3.9),
+        gridspec_kw={"width_ratios": [1.0, 1.35]},
+    )
+    image = axis_a.imshow(matrix, cmap="Blues", vmin=0, vmax=1, aspect="auto")
+    axis_a.set_xticks(
+        range(len(SCENARIOS)),
+        [SCENARIO_LABELS[s].replace("-", "-\n") for s in SCENARIOS],
+        fontsize=7,
+    )
+    axis_a.set_yticks(range(len(CANDIDATES)), CANDIDATES)
     for row in range(matrix.shape[0]):
         for column in range(matrix.shape[1]):
             value = matrix[row, column]
-            axis.text(column, row, f"{value:.3f}", ha="center", va="center", fontsize=7, color="white" if value > 0.55 else "black")
+            axis_a.text(
+                column,
+                row,
+                f"{value:.3f}",
+                ha="center",
+                va="center",
+                fontsize=7,
+                color="white" if value > 0.55 else "black",
+            )
             if value >= 0.5:
-                axis.add_patch(plt.Rectangle((column - 0.5, row - 0.5), 1, 1, fill=False, edgecolor="#D55E00", linewidth=1.2))
-    axis.set_title("Metric-aggregated Top-1 frequency", fontsize=9)
-    figure.colorbar(image, ax=axis, fraction=0.046, pad=0.04, label="Frequency")
+                axis_a.add_patch(
+                    plt.Rectangle(
+                        (column - 0.5, row - 0.5),
+                        1,
+                        1,
+                        fill=False,
+                        edgecolor="#D55E00",
+                        linewidth=1.2,
+                    )
+                )
+    axis_a.set_title("(a) Metric-aggregated Top-1 frequency", fontsize=8.5)
+    figure.colorbar(image, ax=axis_a, fraction=0.046, pad=0.04, label="Frequency")
+
+    metric_order = [
+        "resilience_index",
+        "functionality_day_30",
+        "functionality_day_90",
+        "recovery_rapidity_90",
+    ]
+    metric_labels = {
+        "resilience_index": "Resilience\nindex",
+        "functionality_day_30": "Functionality\n30 d",
+        "functionality_day_90": "Functionality\n90 d",
+        "recovery_rapidity_90": "Recovery\nrapidity",
+    }
+    scenario_order = ["shape_only", "evidence_tradeoff", "boundary_tradeoff"]
+    mean_matrix = np.zeros((len(metric_order), len(scenario_order)))
+    max_matrix = np.zeros_like(mean_matrix)
+    for metric_index, metric_name in enumerate(metric_order):
+        for scenario_index, scenario_name in enumerate(scenario_order):
+            cells = [
+                float(row["mean"])
+                for row in ranking_rows
+                if row["scenario"] == scenario_name
+                and row["metric"] == metric_name
+                and row["statistic"] == "top1_change_rate"
+            ]
+            if not cells:
+                raise RuntimeError(
+                    f"missing top1_change_rate for {scenario_name}/{metric_name}"
+                )
+            mean_matrix[metric_index, scenario_index] = float(np.mean(cells))
+            max_matrix[metric_index, scenario_index] = float(np.max(cells))
+
+    image_b = axis_b.imshow(
+        mean_matrix,
+        cmap="OrRd",
+        vmin=0.0,
+        vmax=0.75,
+        aspect="auto",
+    )
+    axis_b.set_xticks(
+        range(len(scenario_order)),
+        [SCENARIO_LABELS[s].replace("-", "-\n") for s in scenario_order],
+        fontsize=7,
+    )
+    axis_b.set_yticks(
+        range(len(metric_order)),
+        [metric_labels[m] for m in metric_order],
+        fontsize=7,
+    )
+    for row in range(mean_matrix.shape[0]):
+        for column in range(mean_matrix.shape[1]):
+            mean_value = mean_matrix[row, column]
+            max_value = max_matrix[row, column]
+            axis_b.text(
+                column,
+                row,
+                f"mean {mean_value:.3f}\nmax {max_value:.3f}",
+                ha="center",
+                va="center",
+                fontsize=6.5,
+                color="white" if mean_value > 0.42 else "black",
+            )
+    axis_b.set_title("(b) Shape-induced Top-1 change rate", fontsize=8.5)
+    figure.colorbar(
+        image_b,
+        ax=axis_b,
+        fraction=0.046,
+        pad=0.04,
+        label="Mean change rate",
+    )
     figure.tight_layout()
     save_figure(figure, "fig1_top1_matrix")
 

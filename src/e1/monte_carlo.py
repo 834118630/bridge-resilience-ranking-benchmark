@@ -13,7 +13,7 @@ from collections.abc import Mapping, Sequence
 from functools import lru_cache
 
 import numpy as np
-from scipy.stats import norm, truncnorm
+from scipy.stats import lognorm, norm, truncnorm
 
 from .recovery_models import RECOVERY_MODELS
 
@@ -37,6 +37,7 @@ def sample_recovery_days_matrix(
     rng: np.random.Generator,
     states: Sequence[str] = DAMAGE_STATES,
     lower_bound_days: float = 0.05,
+    distribution: str = "truncnorm",
 ) -> np.ndarray:
     """Sample paired damage-state recovery durations.
 
@@ -52,17 +53,30 @@ def sample_recovery_days_matrix(
         sd = float(recovery[state]["sd_days"])
         if mean <= 0.0 or sd <= 0.0:
             raise ValueError("recovery mean and sd must be positive")
-        a = (lower_bound_days - mean) / sd
-        sampled.append(
-            truncnorm.rvs(
-                a,
-                np.inf,
-                loc=mean,
-                scale=sd,
-                size=n_samples,
-                random_state=rng,
+        if distribution == "truncnorm":
+            a = (lower_bound_days - mean) / sd
+            sampled.append(
+                truncnorm.rvs(
+                    a,
+                    np.inf,
+                    loc=mean,
+                    scale=sd,
+                    size=n_samples,
+                    random_state=rng,
+                )
             )
-        )
+        elif distribution == "lognormal":
+            # Match the nominal mean and standard deviation before truncation,
+            # then condition the lognormal distribution on x >= lower_bound_days.
+            sigma = np.sqrt(np.log1p((sd / mean) ** 2))
+            mu = np.log(mean) - 0.5 * sigma**2
+            lower_cdf = lognorm.cdf(lower_bound_days, s=sigma, scale=np.exp(mu))
+            uniforms = rng.uniform(lower_cdf, 1.0, size=n_samples)
+            sampled.append(
+                lognorm.ppf(uniforms, s=sigma, scale=np.exp(mu))
+            )
+        else:
+            raise ValueError("distribution must be 'truncnorm' or 'lognormal'")
     return np.column_stack(sampled)
 
 
@@ -528,6 +542,29 @@ def ranking_stability_statistics(
         "mean_kendall_tau": np.mean(np.stack(tau_values, axis=0), axis=0),
         "mean_spearman_rho": np.mean(np.stack(spearman_values, axis=0), axis=0),
     }
+
+
+def fractional_top1_credit(
+    values: np.ndarray,
+    *,
+    rtol: float = 1e-12,
+    atol: float = 1e-15,
+) -> np.ndarray:
+    """Return fractional Top-1 credit for exact or numerical ties.
+
+    Each row contributes a total credit of one. If one candidate is uniquely
+    best, it receives one. If several candidates are tied within the stated
+    tolerance, the credit is divided equally among them. This avoids assigning
+    a deterministic winner to equivalent candidate profiles solely because of
+    their position in the candidate array.
+    """
+
+    array = np.asarray(values, dtype=float)
+    if array.ndim != 2:
+        raise ValueError("values must have shape (samples, candidates)")
+    best = np.max(array, axis=1, keepdims=True)
+    tied = np.isclose(array, best, rtol=rtol, atol=atol)
+    return tied / tied.sum(axis=1, keepdims=True)
 
 
 def normalized_regret_for_scene(values: np.ndarray) -> np.ndarray:

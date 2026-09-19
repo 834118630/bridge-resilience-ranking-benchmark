@@ -28,6 +28,7 @@ from .run_cost_break_even import (
     discounted_loss_days,
     expected_curves,
 )
+from .provenance import write_run_metadata
 from .run_monte_carlo import load_beta
 from .run_pilot import (
     DAMAGE_STATES,
@@ -45,7 +46,7 @@ from .run_profile_monte_carlo import (
     PROFILE_SCENARIOS,
 )
 
-OUTPUT_DIR = PROJECT_ROOT / "results" / "e1_independent_sampling"
+OUTPUT_DIR = PROJECT_ROOT / "results" / "e1_independent_sampling_final"
 
 
 def independent_recovery_base(
@@ -320,6 +321,21 @@ def main() -> None:
     }
     with (output_dir / "sampling_summary.json").open("w", encoding="utf-8") as handle:
         json.dump(summary, handle, ensure_ascii=False, indent=2)
+
+    write_run_metadata(
+        output_dir,
+        command="python -m e1.run_independent_sampling_robustness "
+        f"--samples {args.samples} --seed {args.seed} "
+        f"--time-step-days {args.time_step_days} "
+        f"--output-dir {output_dir}",
+        parameters={
+            "samples": args.samples,
+            "seed": args.seed,
+            "time_step_days": args.time_step_days,
+            "profile_scenarios": PROFILE_SCENARIOS,
+        },
+        input_paths=(fragility_path, recovery_path),
+    )
 
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

@@ -17,6 +17,7 @@ from .monte_carlo import (
     METRIC_NAMES,
     candidate_recovery_times,
     damage_state_probabilities_batch,
+    fractional_top1_credit,
     metrics_batch,
     normalized_regret_for_scene,
     ranking_stability_statistics,
@@ -36,7 +37,7 @@ from .run_pilot import (
 )
 from .uncertainty import percentile_ci, stratified_paired_bootstrap
 
-OUTPUT_DIR = PROJECT_ROOT / "tmp" / "e1_profile_monte_carlo"
+OUTPUT_DIR = PROJECT_ROOT / "results" / "e1_profile_monte_carlo"
 PROFILE_LABELS = ["L0", "L1", "L2", "L3", "L4", "F_fast"]
 PROFILE_CAPACITIES = [0.0, 0.25, 0.5, 0.75, 1.0, 0.5]
 PROFILE_SCENARIOS = {
@@ -81,6 +82,18 @@ def main() -> None:
     parser.add_argument("--samples", type=int, default=10000)
     parser.add_argument("--seed", type=int, default=20260914)
     parser.add_argument("--bootstrap-resamples", type=int, default=10000)
+    parser.add_argument(
+        "--recovery-lower-bound",
+        type=float,
+        default=0.05,
+        help="Lower truncation bound in days for recovery-duration sampling.",
+    )
+    parser.add_argument(
+        "--recovery-distribution",
+        choices=("truncnorm", "lognormal"),
+        default="truncnorm",
+        help="Distribution used for recovery-duration sampling.",
+    )
     parser.add_argument("--output-dir", type=Path, default=OUTPUT_DIR)
     args = parser.parse_args()
 
@@ -112,14 +125,23 @@ def main() -> None:
             sa_levels=SA_LEVELS,
         )
 
-    base_recovery_days = sample_recovery_days_matrix(recovery, args.samples, rng)
+    base_recovery_days = sample_recovery_days_matrix(
+        recovery,
+        args.samples,
+        rng,
+        lower_bound_days=args.recovery_lower_bound,
+        distribution=args.recovery_distribution,
+    )
     ranking_rows: list[dict[str, object]] = []
     candidate_rows: list[dict[str, object]] = []
+    metric_regret_rows: list[dict[str, object]] = []
+    loo_metric_rows: list[dict[str, object]] = []
     minimax_by_scenario: dict[str, dict[str, dict[str, float]]] = {}
 
     for scenario_name, multipliers in PROFILE_SCENARIOS.items():
         recovery_times = candidate_recovery_times(base_recovery_days, multipliers)
         condition_means: dict[str, list[tuple[str, np.ndarray]]] = defaultdict(list)
+        metric_condition_means: dict[str, list[tuple[str, np.ndarray]]] = defaultdict(list)
         within_condition_variance: list[np.ndarray] = []
         top1_counts = {
             metric_name: {
@@ -170,12 +192,12 @@ def main() -> None:
                     values = model_arrays[model_name]
                     for sa_index in range(len(SA_LEVELS)):
                         scene_values = values[:, :, sa_index]
-                        winners = np.argmax(scene_values, axis=1)
+                        credit = fractional_top1_credit(scene_values)
                         for candidate_index, candidate in enumerate(PROFILE_LABELS):
-                            top1_counts[metric_name][candidate] += int(
-                                np.sum(winners == candidate_index)
+                            top1_counts[metric_name][candidate] += float(
+                                credit[:, candidate_index].sum()
                             )
-                        total_top1_draws[metric_name] += len(winners)
+                        total_top1_draws[metric_name] += credit.shape[0]
 
                 for model_name in RECOVERY_MODELS:
                     values = model_arrays[model_name]
@@ -189,12 +211,9 @@ def main() -> None:
                         scene_regret = normalized_regret_for_scene(
                             values[:, :, sa_index]
                         )
-                        condition_means[case_id].append(
-                            (
-                                case_id,
-                                scene_regret.mean(axis=0),
-                            )
-                        )
+                        condition_value = (case_id, scene_regret.mean(axis=0))
+                        condition_means[case_id].append(condition_value)
+                        metric_condition_means[metric_name].append(condition_value)
                         # Within-condition Monte Carlo variance of that mean,
                         # kept so that the two sources of uncertainty can be
                         # reported separately.
@@ -260,6 +279,47 @@ def main() -> None:
                     ),
                 }
             )
+        for metric_name in METRIC_NAMES:
+            metric_entries = metric_condition_means[metric_name]
+            metric_mean, metric_low, metric_high = aggregate_condition_means(
+                metric_entries,
+                args.bootstrap_resamples,
+                rng,
+            )
+            for index, candidate in enumerate(PROFILE_LABELS):
+                metric_regret_rows.append(
+                    {
+                        "scenario": scenario_name,
+                        "metric": metric_name,
+                        "candidate": candidate,
+                        "mean_regret": float(metric_mean[index]),
+                        "bootstrap_ci95_low": float(metric_low[index]),
+                        "bootstrap_ci95_high": float(metric_high[index]),
+                    }
+                )
+
+            other_entries = [
+                entry
+                for other_metric in METRIC_NAMES
+                if other_metric != metric_name
+                for entry in metric_condition_means[other_metric]
+            ]
+            loo_mean, loo_low, loo_high = aggregate_condition_means(
+                other_entries,
+                args.bootstrap_resamples,
+                rng,
+            )
+            loo_row: dict[str, object] = {
+                "scenario": scenario_name,
+                "excluded_metric": metric_name,
+                "top1_candidate": PROFILE_LABELS[int(np.argmin(loo_mean))],
+            }
+            for index, candidate in enumerate(PROFILE_LABELS):
+                loo_row[f"mean_regret_{candidate}"] = float(loo_mean[index])
+                loo_row[f"bootstrap_ci95_low_{candidate}"] = float(loo_low[index])
+                loo_row[f"bootstrap_ci95_high_{candidate}"] = float(loo_high[index])
+            loo_metric_rows.append(loo_row)
+
         minimax_by_scenario[scenario_name] = scenario_minimax
 
     with (output_dir / "ranking_summary.csv").open("w", encoding="utf-8", newline="") as handle:
@@ -271,6 +331,16 @@ def main() -> None:
         writer = csv.DictWriter(handle, fieldnames=list(candidate_rows[0].keys()))
         writer.writeheader()
         writer.writerows(candidate_rows)
+
+    with (output_dir / "metric_regret_summary.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(metric_regret_rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(metric_regret_rows)
+
+    with (output_dir / "loo_metric_sensitivity.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(loo_metric_rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(loo_metric_rows)
 
     with (output_dir / "minimax_regret.json").open("w", encoding="utf-8") as handle:
         json.dump(minimax_by_scenario, handle, ensure_ascii=False, indent=2)
@@ -284,6 +354,17 @@ def main() -> None:
         "profile_scenarios": PROFILE_SCENARIOS,
         "recovery_models": list(RECOVERY_MODELS),
         "metrics": list(METRIC_NAMES),
+        "mean_regret_weighting": "equal weight across 2 bridge cases, 5 Sa levels, 4 recovery models, and 4 metrics; conditions are averaged within case before bootstrap",
+        "recovery_lower_bound_days": args.recovery_lower_bound,
+        "recovery_distribution": args.recovery_distribution,
+        "command": "python -m e1.run_profile_monte_carlo "
+        f"--samples {args.samples} --seed {args.seed} "
+        f"--bootstrap-resamples {args.bootstrap_resamples} "
+        f"--recovery-lower-bound {args.recovery_lower_bound} "
+        f"--recovery-distribution {args.recovery_distribution} "
+        f"--output-dir {output_dir}",
+        "status": "complete",
+        "failure_status": "none",
         "input_hashes": {
             str(fragility_path): sha256_file(fragility_path),
             str(recovery_path): sha256_file(recovery_path),

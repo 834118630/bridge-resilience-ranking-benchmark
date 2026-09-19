@@ -26,6 +26,7 @@ from .monte_carlo import (
     recovery_parameter_arrays,
     sample_recovery_days_matrix,
 )
+from .provenance import write_run_metadata
 from .run_monte_carlo import load_beta
 from .run_pilot import (
     DAMAGE_STATES,
@@ -209,6 +210,19 @@ def main() -> None:
     }
     with (output_dir / "summary.json").open("w", encoding="utf-8") as handle:
         json.dump(summary, handle, ensure_ascii=False, indent=2)
+    write_run_metadata(
+        output_dir,
+        command="python -m e1.run_profile_phase_diagram "
+        f"--recovery-samples {args.recovery_samples} --seed {args.seed} "
+        f"--output-dir {output_dir}",
+        parameters={
+            "recovery_samples": args.recovery_samples,
+            "seed": args.seed,
+            "capacity_grid": CAPACITY_GRID,
+            "speed_grid": SPEED_GRID,
+        },
+        input_paths=(fragility_path, recovery_path),
+    )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 
 

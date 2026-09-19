@@ -1,64 +1,31 @@
 {
-  "seed": 20260914,
-  "n_samples": 10000,
-  "bootstrap_resamples": 10000,
-  "profile_labels": [
-    "L0",
-    "L1",
-    "L2",
-    "L3",
-    "L4",
-    "F_fast"
-  ],
-  "profile_capacities": [
-    0.0,
-    0.25,
-    0.5,
-    0.75,
-    1.0,
-    0.5
-  ],
-  "profile_scenarios": {
-    "shape_only": [
-      1.0,
-      1.0,
-      1.0,
-      1.0,
-      1.0,
-      1.0
-    ],
-    "evidence_tradeoff": [
-      1.0,
-      1.15,
-      1.3,
-      1.5,
-      1.75,
-      0.1
-    ],
-    "boundary_tradeoff": [
-      1.0,
-      1.15,
-      1.3,
-      1.5,
-      1.75,
-      0.5
-    ]
+  "status": "complete",
+  "failure_status": "none",
+  "generated_at_utc": "2026-09-19T02:35:50.633961+00:00",
+  "command": "python -m e1.run_profile_monte_carlo --samples 10000 --seed 20260914 --bootstrap-resamples 10000 --recovery-lower-bound 0.05 --recovery-distribution truncnorm --output-dir results/e1_profile_monte_carlo",
+  "parameters": {
+    "samples": 10000,
+    "seed": 20260914,
+    "bootstrap_resamples": 10000,
+    "recovery_lower_bound_days": 0.05,
+    "recovery_distribution": "truncnorm"
   },
-  "recovery_models": [
-    "linear",
-    "exponential",
-    "trigonometric",
-    "delayed_recovery"
-  ],
-  "metrics": [
-    "resilience_index",
-    "functionality_day_30",
-    "functionality_day_90",
-    "recovery_rapidity_90"
-  ],
   "input_hashes": {
-    "C:\\Users\\Administrator.000\\Documents\\ChatGPT\\桥梁SCI论文写作\\02_PLANNING\\e1_g0\\07_hazus_fragility.csv": "7e41c1ed8b364815284e1545bc378db06e96f5423e56c2f4ff0f178730f96801",
-    "C:\\Users\\Administrator.000\\Documents\\ChatGPT\\桥梁SCI论文写作\\02_PLANNING\\e1_g0\\08_hazus_recovery.csv": "5cfa42513f59b7a007e68fa1fc7a7baaed4b6c84856aea2ae7e4604a8dc3f2fd"
+    "data/07_hazus_fragility.csv": "7e41c1ed8b364815284e1545bc378db06e96f5423e56c2f4ff0f178730f96801",
+    "data/08_hazus_recovery.csv": "5cfa42513f59b7a007e68fa1fc7a7baaed4b6c84856aea2ae7e4604a8dc3f2fd"
+  },
+  "output_hashes": {
+    "results/e1_profile_monte_carlo/candidate_summary.csv": "5454266b1dcefb5a290d8f5823b25129dc5ef6d3fc5a6cbfbafe439cae9799ed",
+    "results/e1_profile_monte_carlo/figures/boundary_tradeoff_pairwise_reversal_rate.png": "292bd8a3761378976b637e450b7ca557347d278450a97e31adb4bc2b25e2081a",
+    "results/e1_profile_monte_carlo/figures/boundary_tradeoff_top1_change_rate.png": "4f0ba2cd498eba465886abc6eb874918a5799dbf6b276491334b5a0598d38845",
+    "results/e1_profile_monte_carlo/figures/evidence_tradeoff_pairwise_reversal_rate.png": "c9e93e78633d53bcf7e671220a5316247f9f3c4d93a0a0c63690afc4fcff4bdc",
+    "results/e1_profile_monte_carlo/figures/evidence_tradeoff_top1_change_rate.png": "b9b94104f0b2e17101f137a4eb4d9f6841b2158647eb410c9f866f0a12d00eb7",
+    "results/e1_profile_monte_carlo/figures/mean_regret_by_scenario.png": "bf36398fe2809629dc877a603740b0619affab32874d849f7956dcf3610c2003",
+    "results/e1_profile_monte_carlo/figures/top1_frequency_by_scenario.png": "d7c5313cea6135ad8bacaa5bcb8bec06fbf3561d40b4708acb3c82843210ca2c",
+    "results/e1_profile_monte_carlo/loo_metric_sensitivity.csv": "e90fa0cf0248da9e2ebe5d2135c9151f572ea0a9d202e50207e136e55a0efdc3",
+    "results/e1_profile_monte_carlo/metric_regret_summary.csv": "4c23087b10fc2369679e112cdc91858bf590bc1adc9bd3b9852e963fba46f1aa",
+    "results/e1_profile_monte_carlo/minimax_regret.json": "0b75702a5c8c43f9acc83817d861af685e99477b10798974d7e3f0375ae62faf",
+    "results/e1_profile_monte_carlo/ranking_summary.csv": "03733df47fb9c142d8ac6c4e241605e79879aabf106dc2c6506911e54efd3c20"
   },
   "environment": {
     "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",

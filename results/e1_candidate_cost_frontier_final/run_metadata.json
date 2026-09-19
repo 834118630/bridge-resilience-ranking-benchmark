@@ -1,0 +1,33 @@
+{
+  "status": "complete",
+  "failure_status": "none",
+  "generated_at_utc": "2026-09-19T02:35:50.898372+00:00",
+  "command": "python -m e1.run_candidate_cost_frontier --samples 10000 --seed 20260919 --time-step-days 2.0 --bootstrap-resamples 10000 --output-dir results/e1_candidate_cost_frontier_final",
+  "parameters": {
+    "samples": 10000,
+    "seed": 20260919,
+    "time_step_days": 2.0,
+    "bootstrap_resamples": 10000
+  },
+  "input_hashes": {
+    "data/07_hazus_fragility.csv": "7e41c1ed8b364815284e1545bc378db06e96f5423e56c2f4ff0f178730f96801",
+    "data/08_hazus_recovery.csv": "5cfa42513f59b7a007e68fa1fc7a7baaed4b6c84856aea2ae7e4604a8dc3f2fd",
+    "results/e1_profile_monte_carlo/candidate_summary.csv": "5454266b1dcefb5a290d8f5823b25129dc5ef6d3fc5a6cbfbafe439cae9799ed"
+  },
+  "output_hashes": {
+    "results/e1_candidate_cost_frontier_final/candidate_frontier.csv": "ebe0cbd1a83aa33d52e04223e8ff8a5beb72357a060f3d0aa2c6dcc326e5e78c",
+    "results/e1_candidate_cost_frontier_final/candidate_loss_days.csv": "1574dfa7e634b401051e550b95e606931f19cf5612caea5cdd6cad474a1d3023",
+    "results/e1_candidate_cost_frontier_final/economic_utility.csv": "d02dcffdf76878f7641e0a4cae3bc88aaa5e43eacf964a56126191a8cfde6992",
+    "results/e1_candidate_cost_frontier_final/figures/boundary_tradeoff_linear_moderate_frontier.png": "241e14e02849d3c8bdf3ad20fd9febae6aedf4530853cf3a0ce96daf60b15b06",
+    "results/e1_candidate_cost_frontier_final/figures/evidence_tradeoff_linear_moderate_frontier.png": "c3311bd7055c1d09da5d487ea7bcbaa171b022dd5fe49ae7193700419668ea6b",
+    "results/e1_candidate_cost_frontier_final/figures/shape_only_linear_moderate_frontier.png": "103a8ec407781baba544528ee5359ecfa7fcd88daa6ed44645b76968b10cbc09",
+    "results/e1_candidate_cost_frontier_final/frontier_summary.json": "0f2f708688c1f84b7b934bf2f76f9781865b2f5aabf7c0953cc4b2a741be760d",
+    "results/e1_candidate_cost_frontier_final/rank_concordance.csv": "f1fb8b3cb285a9ada27dbcb882fe3dab92138a77fc6fcaca3534bad0a2342169"
+  },
+  "environment": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  }
+}

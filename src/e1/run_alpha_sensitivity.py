@@ -26,6 +26,8 @@ from pathlib import Path
 
 import numpy as np
 
+from .provenance import write_run_metadata
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -112,13 +114,23 @@ def main() -> None:
                 ])
                 flags = pareto_flags(costs, loss_vec)
                 l3 = LABELS.index("L3")
+                l4 = LABELS.index("L4")
+                l4_dominates_l3 = bool(
+                    costs[l4] <= costs[l3] + TOLERANCE
+                    and loss_vec[l4] <= loss_vec[l3] + TOLERANCE
+                    and (
+                        costs[l4] < costs[l3] - TOLERANCE
+                        or loss_vec[l4] < loss_vec[l3] - TOLERANCE
+                    )
+                )
                 rows.append({
                     "scenario": scenario,
                     "alpha_c": alpha_c,
                     "alpha_s": alpha_s,
                     "theta_f": args.theta_f,
-                    "cost_L3_minus_L4": float(costs[l3] - costs[LABELS.index("L4")]),
+                    "cost_L3_minus_L4": float(costs[l3] - costs[l4]),
                     "analytic_0p25_alpha_s_minus_alpha_c": float(0.25 * (alpha_s - alpha_c)),
+                    "L4_dominates_L3": l4_dominates_l3,
                     "L3_pareto_efficient": bool(flags[l3]),
                     "pareto_members": ",".join(label for label, flag in zip(LABELS, flags) if flag),
                 })
@@ -131,17 +143,36 @@ def main() -> None:
 
     identity_error = max(abs(r["cost_L3_minus_L4"] - r["analytic_0p25_alpha_s_minus_alpha_c"]) for r in rows)
     zero_cost_rows = [r for r in rows if abs(r["cost_L3_minus_L4"]) >= 0 and r["alpha_c"] == 1.0 and r["alpha_s"] == 0.0]
-    matches = [r for r in rows if (r["alpha_s"] >= r["alpha_c"]) != (not r["L3_pareto_efficient"])]
+    l4_domination_violations = [
+        r for r in rows if r["L4_dominates_L3"] != (r["alpha_s"] >= r["alpha_c"])
+    ]
     summary = {
         "grid": grid,
         "theta_f": args.theta_f,
         "rows": len(rows),
         "max_abs_error_analytic_identity": identity_error,
-        "L3_dominated_iff_alpha_s_ge_alpha_c": len(matches) == 0,
-        "violations": matches[:5],
+        "L4_dominates_L3_iff_alpha_s_ge_alpha_c": len(l4_domination_violations) == 0,
+        "L4_domination_violations": l4_domination_violations[:5],
+        "L3_pareto_efficient_count": {
+            scenario: sum(
+                1
+                for r in rows
+                if r["scenario"] == scenario and r["L3_pareto_efficient"]
+            )
+            for scenario in sorted({r["scenario"] for r in rows})
+        },
         "boundary_note": "alpha_c = 1.0 with alpha_s = 0.0 puts the L0 cost index at zero; the point is retained as the edge of the linear model's validity.",
     }
     (args.output_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    write_run_metadata(
+        args.output_dir,
+        command="python -m e1.run_alpha_sensitivity "
+        f"--theta-f {args.theta_f} --grid "
+        + " ".join(str(value) for value in grid)
+        + f" --output-dir {args.output_dir}",
+        parameters={"theta_f": args.theta_f, "grid": grid},
+        input_paths=(LOSS_PATH,),
+    )
     print(json.dumps(summary, indent=2))
     print("wrote", out_csv)
 
